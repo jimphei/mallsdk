@@ -1,0 +1,23 @@
+{
+    "name": "jimphei/mallsdk",
+    "description": "淘客sdk",
+    "type": "library",
+    "license": "Apache-2.0",
+    "versoin": "1.0.1",
+    "authors": [
+        {
+            "name": "jimphei",
+            "email": "453101197@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "guzzlehttp/guzzle": "^6.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jimphei\\mallsdk\\": "src/",
+            "Com\\Pdd\\Pop\\Sdk\\": "src/pinduoduo/sdk/"
+        }
+    }
+}
