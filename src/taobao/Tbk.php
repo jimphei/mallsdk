@@ -33,6 +33,7 @@ class Tbk implements RequestInterface
         $this->client->secretKey = $this->appSecret;
         $this->client->format = 'json';        
     }
+
     public static function installSdk(){
         if (!defined("TOP_AUTOLOADER_PATH"))
         {        
@@ -57,6 +58,7 @@ class Tbk implements RequestInterface
         return $this;
     }
     /**
+     * 获取媒体ID
      * @return mixed
      */
     public function getAdzoneId()
@@ -64,6 +66,7 @@ class Tbk implements RequestInterface
         return $this->adzoneId;
     }
     /**
+     * 设置媒体id
      * @param mixed $adzoneId
      */
     public function setAdzoneId($adzoneId): self
@@ -184,7 +187,13 @@ class Tbk implements RequestInterface
         $resp = $this->client->execute($req);
         return $resp;
     }
-    
+
+    /**
+     * 备案
+     * @param string $inviter_code
+     * @param string $note
+     * @return false|mixed|\ResultSet|\SimpleXMLElement|string
+     */
     public function beian(string $inviter_code,$note = ''){
         $req = new \TbkScPublisherInfoSaveRequest;
         $req->setRelationFrom("1");
@@ -198,7 +207,11 @@ class Tbk implements RequestInterface
         $resp = $this->client->execute($req);
         return $resp;
     }
-    
+
+    /**
+     * 获取邀请码
+     * @return false|mixed|\ResultSet|\SimpleXMLElement|string
+     */
     public function genInviteCode(){
         $req = new \TbkScInvitecodeGetRequest;
         $req->setRelationApp("common");
@@ -206,4 +219,10 @@ class Tbk implements RequestInterface
         $resp = $this->client->execute($req);  
         return $resp;
     }
+
+    public function convertUrl(array $num_iids){
+        $req = new \TbkItemConvertRequest()
+    }
+
+
 }

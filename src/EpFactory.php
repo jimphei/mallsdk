@@ -9,6 +9,7 @@ namespace Jimphei\mallsdk;
 use Jimphei\mallsdk\jingdong\JingDong;
 use Com\Pdd\Pop\Sdk\PopHttpClient;
 use Jimphei\mallsdk\meituan\sdk\Meituan;
+use Jimphei\mallsdk\taobao\Tbk;
 
 
 class EpFactory
@@ -29,39 +30,39 @@ class EpFactory
         $name = 'taobao';
         $obj = self::getInstance();
 
-        return $obj->build($name,...$config);
+        return $obj->build($name,$config);
     }
 
     public static function pinduoduo($config){
         $name = 'pinduoduo';
         $obj = self::getInstance();
 
-        return $obj->build($name,...$config);
+        return $obj->build($name,$config);
     }
 
     public static function jingdong($config){
         $name = 'jingdong';
         $obj = self::getInstance();
 
-        return $obj->build($name,...$config);
+        return $obj->build($name,$config);
     }
     public static function vip($config){
         $name = 'vip';
         $obj = self::getInstance();
 
-        return $obj->build($name,...$config);
+        return $obj->build($name,$config);
     }
 
     public static function suning($config){
         $name = 'suning';
         $obj = self::getInstance();
-        return $obj->build($name,...$config);
+        return $obj->build($name,$config);
     }
 
     public static function meituan($config){
         $name = 'meituan';
         $obj = self::getInstance();
-        return $obj->build($name,...$config);
+        return $obj->build($name,$config);
     }
 
     public static function getInstance()
@@ -81,12 +82,8 @@ class EpFactory
             if (!array_key_exists('app_key', $config) || !array_key_exists('app_secret', $config)) {
                 throw new \InvalidArgumentException('The top client requires api keys.');
             }
-            require_once(dirname(__FILE__).'/taobao/TopSdk.php'); //引用淘宝开放平台 API SDK
-            $c = new \TopClient;
-            $c->appkey = $config['app_key'];
-            $c->secretKey = $config['app_secret'];
-            $c->format = isset($config['format']) ? $config['format'] : 'json';
-            return $c;
+            $tbk = new Tbk($config['app_key'],$config['app_secret']);
+            return $tbk;
         }
         if ($name == "pinduoduo") {
             if (!array_key_exists('client_id', $config) || !array_key_exists('client_secret', $config)) {
