@@ -9,6 +9,7 @@ namespace Jimphei\mallsdk;
 use Jimphei\mallsdk\jingdong\JingDong;
 use Com\Pdd\Pop\Sdk\PopHttpClient;
 use Jimphei\mallsdk\meituan\sdk\Meituan;
+use Jimphei\mallsdk\taobao\Tbk;
 
 
 class EpFactory
@@ -81,11 +82,7 @@ class EpFactory
             if (!array_key_exists('app_key', $config) || !array_key_exists('app_secret', $config)) {
                 throw new \InvalidArgumentException('The top client requires api keys.');
             }
-            require_once(dirname(__FILE__).'/taobao/TopSdk.php'); //引用淘宝开放平台 API SDK
-            $c = new \TopClient;
-            $c->appkey = $config['app_key'];
-            $c->secretKey = $config['app_secret'];
-            $c->format = isset($config['format']) ? $config['format'] : 'json';
+            $c = new Tbk($config['app_key'],$config['app_secret']);
             return $c;
         }
         if ($name == "pinduoduo") {
