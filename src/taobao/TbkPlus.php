@@ -33,9 +33,10 @@ class TbkPlus extends Tbk
             $num_iid=$info['data']['num_iid'];
             $url_gy=$this->url_wy."/hcapi?vekey={$this->wykey}&para={$num_iid}&pid={$pid}";
             $response = $this->request->get($url_gy);
+        
             $result_gy = $response->array();
-            $gy_data=$result_gy['data'];
 
+            $gy_data=$result_gy['data'];
             if(!empty($relationId)){
                 $url_gy .= "&relationId={$relationId}";
                 $response = $this->request->get($url_gy);
@@ -49,31 +50,31 @@ class TbkPlus extends Tbk
 
 
             //优惠券总量
-            if($gy_data['coupon_total_count']) {
+            if(isset($gy_data['coupon_total_count'])) {
                 $info['data']['coupon_total_count']=$gy_data['coupon_total_count'];
             }else {
                 $info['data']['coupon_total_count']=0;
             }
             //优惠券剩余量
-            if($gy_data['coupon_remain_count']) {
+            if(isset($gy_data['coupon_remain_count'])) {
                 $info['data']['coupon_remain_count']=$gy_data['coupon_remain_count'];
             }else {
                 $info['data']['coupon_remain_count']=0;
             }
             //优惠券开始时间
-            if($gy_data['coupon_start_time']) {
+            if(isset($gy_data['coupon_start_time'])) {
                 $info['data']['coupon_start_time']=$gy_data['coupon_start_time'];
             }else {
                 $info['data']['coupon_start_time']='';
             }
             //优惠券结束时间
-            if($gy_data['coupon_end_time']) {
+            if(isset($gy_data['coupon_end_time'])) {
                 $info['data']['coupon_end_time']=$gy_data['coupon_end_time'];
             }else {
                 $info['data']['coupon_end_time']='';
             }
             //优惠券信息
-            if($gy_data['coupon_info']) {
+            if(isset($gy_data['coupon_info'])) {
                 $info['data']['coupon_info']=$gy_data['coupon_info'];
                 //优惠券面额
                 $pos1=strpos($gy_data['coupon_info'],'减');
@@ -84,7 +85,7 @@ class TbkPlus extends Tbk
                 $info['data']['coupon_amount']=0;
             }
             //优惠券推广链接-默认链接地址，有优惠券的情况下会进行替换
-            if($gy_data['coupon_click_url']) {
+            if(isset($gy_data['coupon_click_url'])) {
                 $info['data']['coupon_click_url']=$gy_data['coupon_click_url'];
             }else {
                 $info['data']['coupon_click_url']="https://uland.taobao.com/coupon/edetail?itemId=$num_iid&pid=$pid";
@@ -105,7 +106,7 @@ class TbkPlus extends Tbk
             $info['data']['commission']=substr(sprintf("%.3f",$info['data']['commission']),0,-1);
 
             //商品详情页面地址
-            $info['data']['item_url']=$gy_data['item_url'];
+            //$info['data']['item_url']=$gy_data['item_url'];
 
             //获取商品详情内容
             $content_url='https://mdetail.tmall.com/templates/pages/desc?id='.$num_iid;
@@ -114,6 +115,60 @@ class TbkPlus extends Tbk
         return $info;
     }
 
+	/**
+	 * 获取淘口令
+	 * @param int $num_iid:淘宝商品ID
+	 * @param string $pid:推广位
+	 * @param string $relationId:渠道ID
+     * @return array
+	 */
+	public function generateUrl($num_iid,$pid,$relationId ='')
+	{
+	    //调用高佣接口
+	    //维易淘客-【辅助接口使用】id转高佣淘口令接口
+	    $gy_appkey=$this->wykey;
+
+        //生成渠道分享链接
+        if($relationId){
+            $url_gy_r = $this->url_wy . "/hcapi?vekey=$gy_appkey&para=$num_iid&pid=$pid&relationId=$relationId";
+
+            $response = $this->request->get($url_gy_r);
+            $result_gy_r = $response->array();
+
+            $gy_data_r=$result_gy_r['data'];
+            $res_info['tbk_pwd']=$gy_data_r['tbk_pwd']?:'淘口令';
+            $res_info['ios_tbk_pwd']=$gy_data_r['ios_tbk_pwd']?:'ios淘口令';
+            $res_info['global_tbk_pwd']=$gy_data_r['global_tbk_pwd']?:'淘口令';
+            $title = $this->getNeedBetween($res_info['ios_tbk_pwd'], '【', '】');
+            $res_info['new_tbk_pwd']= $res_info['ios_tbk_pwd'] . '😄' . $title;
+            $res_info['new_tbk_pwd']= str_replace("￥", "", "8馥製選中这条₪".$gy_data_r['tbk_pwd']."₲,咑開【Ta0寳】抢购:".$title."/");
+            $res_info['new_tbk_pwd']= $res_info['ios_tbk_pwd']. '/😄';
+        }else {
+            //此API不需要授权，适用于在已知产品有优惠券情况下（比如产品列表页传参）可以直接调用。不适用于对无优惠券商品的转链。
+            $url_gy = $this->url_wy . "/hcapi?vekey=$gy_appkey&para=$num_iid&pid=$pid";
+            $result_json_gy = $this->request->get($url_gy);
+
+            $result_gy=$result_json_gy->array();
+            $gy_data=$result_gy['data'];
+            $res_info['tbk_pwd']=$gy_data['tbk_pwd']?:'淘口令';
+            $res_info['ios_tbk_pwd']=$gy_data['ios_tbk_pwd']?:'ios淘口令';
+            $res_info['global_tbk_pwd']=$gy_data['global_tbk_pwd']?:'淘口令';
+            $title = $this->getNeedBetween($res_info['ios_tbk_pwd'], '【', '】');
+            $res_info['new_tbk_pwd']= $res_info['ios_tbk_pwd'] . '😄' . $title;
+            $res_info['new_tbk_pwd']= str_replace("￥", "", "8馥製選中这条₪".$gy_data['tbk_pwd']."₲,咑開【Ta0寳】抢购:".$title."/");
+            $res_info['new_tbk_pwd']= $res_info['ios_tbk_pwd']. '/😄';
+        }
+
+	    return $res_info;
+	}
+
+    //截取指定2个字符之间字符串
+    function getNeedBetween($input, $start, $end) {
+        $substr = substr($input, strlen($start)+strpos($input, $start),(strlen($input) - strpos($input, $end))*(-1));
+
+        return $substr;
+
+    }    
 
 
 }

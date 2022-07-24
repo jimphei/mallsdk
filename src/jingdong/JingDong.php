@@ -79,7 +79,6 @@ class JingDong
     {
         $timestamp = date ('Y-m-d H:i:s');
 
-
         $params = [
             'v' => $this->v,
             'method' => $request->getMethod (),

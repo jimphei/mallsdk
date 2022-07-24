@@ -15,7 +15,8 @@ class Jd
     protected $client;
     protected $accessToken;
     protected $unionId;
-    protected $ddxApiKey;
+    
+    protected $ddxApiKey;//订单侠key
 
 
     public function __construct($appKey = "", $appSecret = "")
@@ -174,7 +175,6 @@ class Jd
     public function searchGoods($cat1Id='',$cat2Id='',$cat3Id='',$keyword='',$page_index=1,$page_size=10,$sort_name='',$sort='desc')
     {
         $url = self::DDX_URL.'/jd/query_goods';
-
         $data['apikey'] = $this->getDdxApiKey();
         $data['cid1'] = $cat1Id;
         $data['cid2'] = $cat2Id;
@@ -182,10 +182,8 @@ class Jd
         $data['keyword'] = $keyword;
         $data['pageIndex'] = $page_index;
         $data['pageSize'] = $page_size;
-
         $data['sortName'] = $sort_name;
         $data['sort'] = $sort;
-
         return $this->curl_post($url,$data);
     }
 

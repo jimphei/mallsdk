@@ -199,24 +199,31 @@ class Pdd implements RequestInterface
      * @return mixed
      */
 
-    public function genLink($goods_id, array $custom_parameters,$params=[],$need_auth=false)
+    public function genLink($goods_id, array $custom_parameters,$params=[],$need_auth=false,$pid=null)
     {
         if(is_string($goods_id)){
             $goods_id = [$goods_id];
         }
-        if(!$this->pid){
-            return $this->error(1,'缺少pid');
-        }
         $request = new PddDdkGoodsPromotionUrlGenerateRequest();
+
         if(isset($params['cash_gift_id'])){
             $request->setCashGiftId($params['cash_gift_id']);
         }
         if(isset($params['cash_gift_name'])){
             $request->setCashGiftName($params['cash_gift_name']);
         }
-        if(!in_array('uid',$custom_parameters)){
+        if(!array_key_exists('uid',$custom_parameters)){
             return $this->error(1,'缺少uid');
         }
+
+        if($pid){
+            $request->setPid($pid);
+        }
+        else{
+            if(!$this->pid){
+                return $this->error(1,'缺少pid');
+            }
+        }           
         $request->setCustomParameters(json_encode($custom_parameters,JSON_UNESCAPED_UNICODE));
         if($need_auth){
             $request->setGenerateAuthorityUrl(true);
@@ -367,13 +374,15 @@ class Pdd implements RequestInterface
 
     }
 
-    public function goodsSearch(int $cat_id = null, string $keyword = '', int $sort_type = 5, int $page = 1, int $pageSize = 20, $with_coupon = false)
+    public function goodsSearch($opt_id = null, $cat_id = null,$keyword = '', $sort_type = 5, $page = 1, $pageSize = 20, $with_coupon = false,$pid=null,$uid=0)
     {
         $request = new PddDdkGoodsSearchRequest();
         if($cat_id){
             $request->setCatId($cat_id);
         }
-
+        if($opt_id){
+            $request->setOptId($opt_id);
+        }
         if($keyword){
             $request->setKeyword($keyword);
         }
@@ -381,6 +390,11 @@ class Pdd implements RequestInterface
         $request->setPage($page);
         $request->setPageSize($pageSize);
         $request->setWithCoupon($with_coupon);
+        if($pid){
+            $request->setPid($pid);
+        }
+        $custom_parameters = ['uid'=>$uid];
+        $request->setCustomParameters(json_encode($custom_parameters,JSON_UNESCAPED_UNICODE));        
         try{
             $response = $this->client->syncInvoke($request);
 
@@ -388,10 +402,9 @@ class Pdd implements RequestInterface
             echo $e->getMessage();
             exit;
         }
+
         $content = $response->getContent();
-
         return $this->parse($content);
-
     }
 
     public function goodsDetail($goods_id,$uid = null,$pid = null)

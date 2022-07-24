@@ -17,7 +17,7 @@ class Meituan
     private $appkey;
     private $secret;
     private $secret2;
-    const URL = 'https://runion.meituan.com/api';
+    const URL = 'https://openapi.meituan.com/api';
     const OTO_URL = 'https://openapi.meituan.com/poi';
 
     public function __construct($appkey,$secret,$secret2)
@@ -62,7 +62,7 @@ class Meituan
         $data = [
             'appkey' =>$this->appkey,
             'ts' => time(),
-            'type' => $params['type']??'4',
+            'businessLine' => $params['type']??'4',
             'startTime' => $params['startTime']??strtotime(date('Y-m-d')),//默认一天前
             'endTime' =>$params['endTime']??time(),
             'queryTimeType' => '1',
@@ -126,12 +126,12 @@ class Meituan
     public function generateLink($act_id,$sid,$linkType=1){
         $data = [
             'actId' => $act_id,
-            'key' => $this->appkey,
+            'appkey' => $this->appkey,
             'sid' => $sid,
             'linkType' => $linkType
         ];
         $data['sign'] = $this->sign($data);
-        $url = 'https://runion.meituan.com/generateLink';
+        $url = self::URL.'/generateLink';
         $response = $this->request->get($url,$data);
         return $response->array();
     }
@@ -145,11 +145,11 @@ class Meituan
     public function miniCode($act_id,$sid){
         $data = [
             'actId' => $act_id,
-            'key' => $this->appkey,
+            'appkey' => $this->appkey,
             'sid' => $sid
         ];
         $data['sign'] = $this->sign($data);
-        $url = 'https://runion.meituan.com/miniCode';
+        $url = self::URL.'/miniCode';
         $response = $this->request->get($url,$data);
         return $response->array();
     }
@@ -228,7 +228,7 @@ class Meituan
      */
     public function orderList(array $options)
     {
-        $url = 'https://runion.meituan.com/api/orderList';
+        $url = self::URL.'/orderList';
         //默认 10分钟前的订单
         $end_time_stamp = $options['end_time'] ?? time();
         $gap = $options['gap'] ?? 600;
@@ -273,13 +273,14 @@ class Meituan
     }
 
 
-    public function findById(string $orderid,int $type){
-        $url = 'https://runion.meituan.com/api/rtnotify';
+    public function findById(string $orderid,int $type,int $actId){
+        $url = self::URL.'/order';
         $params = [
-            'key' => $this->appkey,
-            'type' => $type,//查询订单类型0 团购订单2 酒店订单4 外卖订单5 话费订单6 闪购订单
+            'appkey' => $this->appkey,
+            'businessLine' => $type,//查询订单类型0 团购订单2 酒店订单4 外卖订单5 话费订单6 闪购订单
             'full' => 1,
-            'oid' => $orderid
+            'orderId' => $orderid,
+            'actId' =>$actId
         ];
 
         $params['sign'] = self::getSign($params);
