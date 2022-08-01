@@ -217,6 +217,7 @@ class Pdd implements RequestInterface
         if(!in_array('uid',$custom_parameters)){
             return $this->error(1,'缺少uid');
         }
+
         $request->setCustomParameters(json_encode($custom_parameters,JSON_UNESCAPED_UNICODE));
         if($need_auth){
             $request->setGenerateAuthorityUrl(true);
@@ -367,13 +368,15 @@ class Pdd implements RequestInterface
 
     }
 
-    public function goodsSearch(int $cat_id = null, string $keyword = '', int $sort_type = 5, int $page = 1, int $pageSize = 20, $with_coupon = false)
+    public function goodsSearch(int $opt_id = null, int $cat_id = null,string $keyword = '', int $sort_type = 5, int $page = 1, int $pageSize = 20, $with_coupon = false,$pid=null,$uid=0)
     {
         $request = new PddDdkGoodsSearchRequest();
         if($cat_id){
             $request->setCatId($cat_id);
         }
-
+        if($opt_id){
+            $request->setOptId($opt_id);
+        }
         if($keyword){
             $request->setKeyword($keyword);
         }
@@ -381,6 +384,12 @@ class Pdd implements RequestInterface
         $request->setPage($page);
         $request->setPageSize($pageSize);
         $request->setWithCoupon($with_coupon);
+        if($pid){
+            $request->setPid($pid);
+        }
+        $custom_parameters = ['uid'=>$uid];
+        $request->setCustomParameters(json_encode($custom_parameters,JSON_UNESCAPED_UNICODE));
+//        $request->setCustomParameters()
         try{
             $response = $this->client->syncInvoke($request);
 
@@ -388,6 +397,7 @@ class Pdd implements RequestInterface
             echo $e->getMessage();
             exit;
         }
+
         $content = $response->getContent();
 
         return $this->parse($content);

@@ -87,6 +87,26 @@ class Req{
     public function getFields(){
         return $this->fields;
     }
+            
+    private $pin;
+    
+    public function setPin($pin){
+        $this->params['pin'] = $pin;
+    }
+
+    public function getPin(){
+        return $this->pin;
+    }
+            
+    private $orderId;
+    
+    public function setOrderId($orderId){
+        $this->params['orderId'] = $orderId;
+    }
+
+    public function getOrderId(){
+        return $this->orderId;
+    }
     
     function getInstance(){
         return $this->params;

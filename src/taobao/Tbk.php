@@ -31,6 +31,7 @@ class Tbk implements RequestInterface
         $this->client = new \TopClient;
         $this->client->appkey = $this->appKey;
         $this->client->secretKey = $this->appSecret;
+        $this->client->gatewayUrl = 'https://gw.api.taobao.com/router/rest';
         $this->client->format = 'json';        
     }
 
@@ -204,6 +205,7 @@ class Tbk implements RequestInterface
         if($note){
             $req->setNote($note);
         }
+
         $resp = $this->client->execute($req);
         return $resp;
     }
@@ -243,6 +245,12 @@ class Tbk implements RequestInterface
             );
         }
         return $res;
+    }
+
+    public function authUrl($callbackUri){
+        $url = 'https://oauth.taobao.com/authorize?response_type=code&client_id='.$this->appKey;
+        $url .='&redirect_uri='.$callbackUri.'&state=huaxiaomao&view=web';
+        return $url;
     }
 
 

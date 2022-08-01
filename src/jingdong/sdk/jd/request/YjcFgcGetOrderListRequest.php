@@ -10,17 +10,17 @@ class YjcFgcGetOrderListRequest
 	}
 	
 	public function getApiParas(){
-	    if(empty($this->apiParas)){
-            return "{}";
-        }
-        return json_encode($this->apiParas);
+        if(empty($this->apiParas)){
+	        return "{}";
+	    }
+		return json_encode($this->apiParas);
 	}
 	
 	public function check(){
 		
 	}
 	
-	public function putOtherTextParam($key, $value){
+    public function putOtherTextParam($key, $value){
 		$this->apiParas[$key] = $value;
 		$this->$key = $value;
 	}
@@ -34,34 +34,14 @@ class YjcFgcGetOrderListRequest
     public function getVersion(){
         return $this->version;
     }
-                                                        		                                    	                   			private $startTime;
-    	                        
-	public function setStartTime($startTime){
-		$this->startTime = $startTime;
-         $this->apiParas["startTime"] = $startTime;
-	}
+    private  $param1;
 
-	public function getStartTime(){
-	  return $this->startTime;
-	}
+    public function setParam1($param1){
+        $this->apiParas['param1'] = $param1;
+    }
+    public function getParam1(){
+        return $this->apiParas['param1'];
+    }
+}
 
-                        	                        	                   			private $endTime;
-    	                        
-	public function setEndTime($endTime){
-		$this->endTime = $endTime;
-         $this->apiParas["endTime"] = $endTime;
-	}
-
-	public function getEndTime(){
-	  return $this->endTime;
-	}
-
-                            }
-
-
-
-
-
-        
- 
-
+?>

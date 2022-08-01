@@ -127,6 +127,16 @@ class Req{
     public function getPositionId(){
         return $this->positionId;
     }
+            
+    private $pin;
+    
+    public function setPin($pin){
+        $this->params['pin'] = $pin;
+    }
+
+    public function getPin(){
+        return $this->pin;
+    }
     
     function getInstance(){
         return $this->params;

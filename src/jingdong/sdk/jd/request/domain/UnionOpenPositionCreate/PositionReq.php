@@ -67,6 +67,16 @@ class PositionReq{
     public function getSiteId(){
         return $this->siteId;
     }
+            
+    private $pin;
+    
+    public function setPin($pin){
+        $this->params['pin'] = $pin;
+    }
+
+    public function getPin(){
+        return $this->pin;
+    }
     
     function getInstance(){
         return $this->params;
