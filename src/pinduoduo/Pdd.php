@@ -216,6 +216,7 @@ class Pdd implements RequestInterface
             return $this->error(1,'缺少uid');
         }
 
+
         if($pid){
             $request->setPid($pid);
         }
@@ -224,6 +225,7 @@ class Pdd implements RequestInterface
                 return $this->error(1,'缺少pid');
             }
         }           
+
         $request->setCustomParameters(json_encode($custom_parameters,JSON_UNESCAPED_UNICODE));
         if($need_auth){
             $request->setGenerateAuthorityUrl(true);
@@ -394,6 +396,7 @@ class Pdd implements RequestInterface
             $request->setPid($pid);
         }
         $custom_parameters = ['uid'=>$uid];
+
         $request->setCustomParameters(json_encode($custom_parameters,JSON_UNESCAPED_UNICODE));        
         try{
             $response = $this->client->syncInvoke($request);
@@ -402,6 +405,7 @@ class Pdd implements RequestInterface
             echo $e->getMessage();
             exit;
         }
+
 
         $content = $response->getContent();
         return $this->parse($content);

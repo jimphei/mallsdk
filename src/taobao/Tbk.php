@@ -205,7 +205,9 @@ class Tbk implements RequestInterface
         if($note){
             $req->setNote($note);
         }
+
         $resp = $this->client->execute($req,$session);
+
         return $resp;
     }
 
@@ -245,6 +247,7 @@ class Tbk implements RequestInterface
         }
         return $res;
     }
+
 
     public function authUrl($callbackUri,$state='tksaas'){
         $url = 'https://oauth.taobao.com/authorize?response_type=code&client_id='.$this->appKey;

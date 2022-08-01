@@ -90,7 +90,9 @@ interface RequestInterface
      * @params int $page_size:默认20，每页商品数量
      * @params string $with_coupon:是否只返回优惠券的商品，false返回所有商品，true只返回有优惠券的商品
      */
+
     public function goodsSearch($opt_id = null,$cat_id = null, $keyword = '',$sort_type=5,$page = 1,$pageSize = 20,$with_coupon = false,$pid=null,$uid=0);
+
 
     /**
      *  多多进宝商品详情查询

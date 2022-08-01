@@ -87,6 +87,16 @@ class PromotionCodeReq{
     public function getChannelId(){
         return $this->channelId;
     }
+            
+    private $command;
+    
+    public function setCommand($command){
+        $this->params['command'] = $command;
+    }
+
+    public function getCommand(){
+        return $this->command;
+    }
     
     function getInstance(){
         return $this->params;
