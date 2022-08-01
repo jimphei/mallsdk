@@ -119,6 +119,7 @@ class Jingdong
 
     public function execute($request, $access_token = null)
     {
+
         //组装系统参数
         $sysParams["app_key"] = $this->appKey;
         $version = $request->getVersion();
@@ -129,6 +130,7 @@ class Jingdong
         if (null != $access_token)
         {
             $sysParams["access_token"] = $access_token;
+
         }
 
         //获取业务参数

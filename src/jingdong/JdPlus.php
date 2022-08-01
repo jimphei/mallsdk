@@ -6,11 +6,11 @@
  */
 namespace Jimphei\mallsdk\jingdong;
 
-
 use Jimphei\mallsdk\jingdong\request\domain\GoodsReqDTO;
 use Jimphei\mallsdk\jingdong\request\UnionOpenGoodsQueryRequest;
 
 class JdPlus extends JingDong
+
 {
     protected $plus_app_id;
     protected $plus_app_secret;
@@ -19,6 +19,7 @@ class JdPlus extends JingDong
         $this->plus_app_id = $app_id;
         $this->plus_app_secret = $app_secret;
     }
+
     protected function generateSign($params)
     {
         ksort($params);
@@ -112,6 +113,7 @@ class JdPlus extends JingDong
         return $respObject;
     }
 
+
     /**
      * 关键词查询选品
      * @param number $cat1Id:一级类目
@@ -131,6 +133,7 @@ class JdPlus extends JingDong
 
         $goodsReqDTO= new GoodsReqDTO();
 
+
         $goodsReqDTO->setCid1($cat1Id);
         $goodsReqDTO->setCid2($cat2Id);
         $goodsReqDTO->setCid3($cat3Id);
@@ -142,9 +145,8 @@ class JdPlus extends JingDong
 
         $req->setGoodsReqDTO($goodsReqDTO);
         $req->setVersion("1.0");
-
-
         return $this->execute($req);
     }
+
 
 }

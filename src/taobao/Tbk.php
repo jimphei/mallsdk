@@ -195,7 +195,7 @@ class Tbk implements RequestInterface
      * @param string $note
      * @return false|mixed|\ResultSet|\SimpleXMLElement|string
      */
-    public function beian(string $inviter_code,$note = ''){
+    public function beian(string $session,string $inviter_code,$note = ''){
         $req = new \TbkScPublisherInfoSaveRequest;
         $req->setRelationFrom("1");
         $req->setOfflineScene("1");
@@ -206,7 +206,8 @@ class Tbk implements RequestInterface
             $req->setNote($note);
         }
 
-        $resp = $this->client->execute($req);
+        $resp = $this->client->execute($req,$session);
+
         return $resp;
     }
 
@@ -232,7 +233,7 @@ class Tbk implements RequestInterface
         $req->setNumIids($num_iid);
         $resp = $this->client->execute($req);
         $result=json_decode(json_encode($resp),true);
-        if($result['code']) {
+        if(!empty($result['code'])) {
             $res=array(
                 'code'=>$result['sub_code'],
                 'msg'=>$result['sub_msg'],
@@ -247,11 +248,22 @@ class Tbk implements RequestInterface
         return $res;
     }
 
-    public function authUrl($callbackUri){
+
+    public function authUrl($callbackUri,$state='tksaas'){
         $url = 'https://oauth.taobao.com/authorize?response_type=code&client_id='.$this->appKey;
-        $url .='&redirect_uri='.$callbackUri.'&state=huaxiaomao&view=web';
+        $url .='&redirect_uri='.$callbackUri.'&state='.$state.'&view=web';
         return $url;
+    } 
+    
+    
+    public function createToken($code){
+        $req = new \TopAuthTokenCreateRequest;
+        $req->setCode($code);
+        $resp = $this->client->execute($req);
+        $result = json_decode($resp->token_result,true);
+        return $result;
     }
+
 
 
 }
