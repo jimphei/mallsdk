@@ -37,16 +37,6 @@ class ChannelRelationQueryReq{
     public function getChannelId(){
         return $this->channelId;
     }
-            
-    private $pin;
-    
-    public function setPin($pin){
-        $this->params['pin'] = $pin;
-    }
-
-    public function getPin(){
-        return $this->pin;
-    }
     
     function getInstance(){
         return $this->params;

@@ -1,5 +1,7 @@
 <?php
-class NewWareBaseproductGetRequest
+namespace Jimphei\mallsdk\jingdong\request;
+
+class UnionOpenPromotionCommonGetRequest
 {
 
     public function __construct()
@@ -10,7 +12,7 @@ class NewWareBaseproductGetRequest
 	private $apiParas = array();
 	
 	public function getApiMethodName(){
-	  return "jingdong.new.ware.baseproduct.get";
+	  return "jd.union.open.promotion.common.get";
 	}
 	
 	public function getApiParas(){
@@ -38,21 +40,13 @@ class NewWareBaseproductGetRequest
     public function getVersion(){
         return $this->version;
     }
-    private  $skuIdSet;
+    private  $promotionCodeReq;
 
-    public function setSkuIdSet($skuIdSet){
-        $this->apiParas['skuIdSet'] = $skuIdSet;
+    public function setPromotionCodeReq($promotionCodeReq){
+        $this->apiParas['promotionCodeReq'] = $promotionCodeReq->getInstance();
     }
-    public function getSkuIdSet(){
-        return $this->apiParas['skuIdSet'];
-    }
-    private  $baseset;
-
-    public function setBaseset($baseset){
-        $this->apiParas['baseset'] = $baseset;
-    }
-    public function getBaseset(){
-        return $this->apiParas['baseset'];
+    public function getPromotionCodeReq(){
+        return $this->apiParas['promotionCodeReq'];
     }
 }
 

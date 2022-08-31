@@ -62,16 +62,17 @@ class Meituan
         $data = [
             'appkey' =>$this->appkey,
             'ts' => time(),
-            'businessLine' => $params['type']??'4',
+            'businessLine' => $params['type']??'2',
             'startTime' => $params['startTime']??strtotime(date('Y-m-d')),//默认一天前
             'endTime' =>$params['endTime']??time(),
-            'queryTimeType' => '1',
+            'queryTimeType' => '2',
             'page' => $params['page']??'1',
             'limit' => $params['limit']??'50'
         ];
         $data['sign'] = $this->sign($data);
-        $query = ['query'=>$data];
-        $response = $this->request->get(self::URL.'/orderList',$query);
+        //$query = ['query'=>$data];
+        //var_dump($query);exit;
+        $response = $this->request->get(self::URL.'/orderList',$data);
         return $response->array();
     }
 

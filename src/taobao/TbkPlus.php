@@ -37,12 +37,15 @@ class TbkPlus extends Tbk
             $result_gy = $response->array();
 
             $gy_data=$result_gy['data'];
+
             if(!empty($relationId)){
                 $url_gy .= "&relationId={$relationId}";
                 $response = $this->request->get($url_gy);
                 $result_gy_r=$response->array();
+                //var_dump($result_gy_r);exit;
                 $gy_data_r=$result_gy_r['data'];
                 $info['data']['coupon_click_url_r']=$gy_data_r['coupon_click_url'];
+                $gy_data['coupon_click_url'] = $gy_data_r['coupon_click_url'];
             }
             else{
                 $info['data']['coupon_click_url_r']='';
@@ -131,7 +134,6 @@ class TbkPlus extends Tbk
         //生成渠道分享链接
         if($relationId){
             $url_gy_r = $this->url_wy . "/hcapi?vekey=$gy_appkey&para=$num_iid&pid=$pid&relationId=$relationId";
-
             $response = $this->request->get($url_gy_r);
             $result_gy_r = $response->array();
 
@@ -165,9 +167,56 @@ class TbkPlus extends Tbk
     //截取指定2个字符之间字符串
     function getNeedBetween($input, $start, $end) {
         $substr = substr($input, strlen($start)+strpos($input, $start),(strlen($input) - strpos($input, $end))*(-1));
-
         return $substr;
+    }    
 
+
+
+    /**
+     * 抓取订单
+     * @param $params
+     * @param int $query_type
+     * @param string $tk_status
+     * @param string $order_scene
+     * @return mixed
+     */
+    public function fetchOrder($params, int $query_type = 2, int $tk_status = null, int $order_scene = 2)
+    {
+        if(!$this->startTime or !$this->endTime){
+            return $this->error(1,'缺少时间字段');
+        }
+        if((strtotime($this->endTime)-strtotime($this->startTime))>3*3600){
+            return $this->error(1,'时间间隔大于3小时');
+        }
+        $where = "&start_time={$this->startTime}&end_time={$this->endTime}";
+        if ($query_type){
+            $where .= "&query_type={$query_type}";
+        }
+        if (isset($params['position_index'])){
+            $where .= "&position_index={$params['position_index']}";
+        }
+        if (isset($params['page_no'])){
+            $where .= "&page_no={$params['page_no']}";
+        }
+        if (isset($params['page_size'])){
+            $where .= "&page_size={$params['page_size']}";
+        }
+        if (isset($params['member_type'])){
+            $where .= "&member_type={$params['member_type']}";
+        }
+        if ($tk_status){
+            $where .= "&tk_status={$tk_status}";
+        }
+        if (isset($params['jump_type'])){
+            $where .= "&jump_type={$params['jump_type']}";
+        }
+        if ($order_scene){
+            $where .= "&order_scene={$order_scene}";
+        }
+        $url_order = $this->url_wy . "/orderdetails?vekey={$this->wykey}".$where;
+        $response = $this->request->get($url_order);
+        $result_order = $response->array();
+        return $result_order;
     }    
 
 

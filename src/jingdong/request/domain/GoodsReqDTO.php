@@ -50,7 +50,7 @@ class GoodsReqDTO{
     }
             
     private $pageSize;
-    
+
     public function setPageSize($pageSize){
         $this->params['pageSize'] = $pageSize;
     }
@@ -58,9 +58,9 @@ class GoodsReqDTO{
     public function getPageSize(){
         return $this->pageSize;
     }
-            
+
     private $skuIds;
-    
+
     public function setSkuIds($skuIds){
         $this->params['skuIds'] = $skuIds;
     }
@@ -68,7 +68,7 @@ class GoodsReqDTO{
     public function getSkuIds(){
         return $this->skuIds;
     }
-            
+
     private $keyword;
     
     public function setKeyword($keyword){
@@ -120,7 +120,7 @@ class GoodsReqDTO{
     }
             
     private $owner;
-    
+
     public function setOwner($owner){
         $this->params['owner'] = $owner;
     }
@@ -150,7 +150,7 @@ class GoodsReqDTO{
     }
             
     private $isCoupon;
-    
+
     public function setIsCoupon($isCoupon){
         $this->params['isCoupon'] = $isCoupon;
     }
@@ -220,7 +220,7 @@ class GoodsReqDTO{
     }
             
     private $hasContent;
-    
+
     public function setHasContent($hasContent){
         $this->params['hasContent'] = $hasContent;
     }
@@ -300,7 +300,7 @@ class GoodsReqDTO{
     }
             
     private $spuId;
-    
+
     public function setSpuId($spuId){
         $this->params['spuId'] = $spuId;
     }
@@ -360,7 +360,7 @@ class GoodsReqDTO{
     }
             
     private $isReserve;
-    
+
     public function setIsReserve($isReserve){
         $this->params['isReserve'] = $isReserve;
     }
@@ -389,7 +389,7 @@ class GoodsReqDTO{
         return $this->area;
     }
     
-    function getInstance(){
+    public function getInstance(){
         return $this->params;
     }
 

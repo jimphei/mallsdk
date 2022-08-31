@@ -1,5 +1,6 @@
 <?php
-namespace UnionOpenOrderRowQuery;
+namespace Jimphei\mallsdk\jingdong\request\domain;
+
 class OrderReq{
 
     private $params=array();
@@ -96,6 +97,16 @@ class OrderReq{
 
     public function getOrderId(){
         return $this->orderId;
+    }
+            
+    private $pin;
+    
+    public function setPin($pin){
+        $this->params['pin'] = $pin;
+    }
+
+    public function getPin(){
+        return $this->pin;
     }
     
     function getInstance(){

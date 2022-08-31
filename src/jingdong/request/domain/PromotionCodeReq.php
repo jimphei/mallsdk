@@ -1,5 +1,6 @@
 <?php
-namespace UnionOpenPromotionBysubunionidGet;
+namespace Jimphei\mallsdk\jingdong\request\domain;
+
 class PromotionCodeReq{
 
     private $params=array();
@@ -18,14 +19,14 @@ class PromotionCodeReq{
         return $this->materialId;
     }
             
-    private $subUnionId;
+    private $siteId;
     
-    public function setSubUnionId($subUnionId){
-        $this->params['subUnionId'] = $subUnionId;
+    public function setSiteId($siteId){
+        $this->params['siteId'] = $siteId;
     }
 
-    public function getSubUnionId(){
-        return $this->subUnionId;
+    public function getSiteId(){
+        return $this->siteId;
     }
             
     private $positionId;
@@ -36,6 +37,36 @@ class PromotionCodeReq{
 
     public function getPositionId(){
         return $this->positionId;
+    }
+            
+    private $subUnionId;
+    
+    public function setSubUnionId($subUnionId){
+        $this->params['subUnionId'] = $subUnionId;
+    }
+
+    public function getSubUnionId(){
+        return $this->subUnionId;
+    }
+            
+    private $ext1;
+    
+    public function setExt1($ext1){
+        $this->params['ext1'] = $ext1;
+    }
+
+    public function getExt1(){
+        return $this->ext1;
+    }
+            
+    private $protocol;
+    
+    public function setProtocol($protocol){
+        $this->params['protocol'] = $protocol;
+    }
+
+    public function getProtocol(){
+        return $this->protocol;
     }
             
     private $pid;
@@ -56,16 +87,6 @@ class PromotionCodeReq{
 
     public function getCouponUrl(){
         return $this->couponUrl;
-    }
-            
-    private $chainType;
-    
-    public function setChainType($chainType){
-        $this->params['chainType'] = $chainType;
-    }
-
-    public function getChainType(){
-        return $this->chainType;
     }
             
     private $giftCouponKey;

@@ -67,16 +67,6 @@ class OrderReq{
     public function getKey(){
         return $this->key;
     }
-            
-    private $pin;
-    
-    public function setPin($pin){
-        $this->params['pin'] = $pin;
-    }
-
-    public function getPin(){
-        return $this->pin;
-    }
     
     function getInstance(){
         return $this->params;

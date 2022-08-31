@@ -57,16 +57,6 @@ class PidReq{
     public function getMediaName(){
         return $this->mediaName;
     }
-            
-    private $pin;
-    
-    public function setPin($pin){
-        $this->params['pin'] = $pin;
-    }
-
-    public function getPin(){
-        return $this->pin;
-    }
     
     function getInstance(){
         return $this->params;

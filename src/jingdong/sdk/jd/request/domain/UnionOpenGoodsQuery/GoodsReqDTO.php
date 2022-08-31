@@ -1,6 +1,5 @@
 <?php
 namespace UnionOpenGoodsQuery;
-
 class GoodsReqDTO{
 
     private $params=array();

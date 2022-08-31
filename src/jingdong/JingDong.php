@@ -10,7 +10,8 @@ namespace Jimphei\mallsdk\jingdong;
 use DateTimeZone;
 use LtInflector;
 use stdClass;
-
+use Jimphei\mallsdk\jingdong\request\domain\PromotionCodeReq;
+use Jimphei\mallsdk\jingdong\request\UnionOpenPromotionCommonGetRequest;
 class Jingdong
 {
     public $serverUrl = "https://api.jd.com/routerjson";
@@ -149,6 +150,7 @@ class Jingdong
         try
         {
             $resp = $this->curl($requestUrl, $apiParams);
+
         }
         catch (\Exception $e)
         {
@@ -162,14 +164,16 @@ class Jingdong
         $respWellFormed = false;
         if ("json" == $this->format)
         {
-            $respObject = json_decode($resp);
+            $respObject = json_decode($resp,true);
             if (null !== $respObject)
             {
                 $respWellFormed = true;
-//				foreach ($respObject as $propKey => $propValue)
-//				{
-//					$respObject = $propValue;
-//				}
+                if(!empty($respObject['error_response'])){
+                    return $respObject['error_response'];
+                }
+                //var_dump($respObject);exit;
+                $key = str_replace('.','_',$sysParams["method"]).'_responce';
+                return json_decode($respObject[$key]['queryResult'],true);
             }
         }
         else if("xml" == $this->format)
@@ -234,6 +238,7 @@ class Jingdong
         if($timezone == 'UTC') {
             return '+0000';
         } else {
+
             $timezone = new DateTimeZone($timezone);
             $transitions = array_slice($timezone->getTransitions(), -3, null, true);
 
@@ -251,6 +256,20 @@ class Jingdong
         }
     }
 
+/*
+    public function getPromotion($goodsId,$siteId,$positionId,$pid){
+        $req = new UnionOpenPromotionCommonGetRequest();
+        $queryData = new PromotionCodeReq();
+        $materialId = 'https://item.jd.com/'.$goodsId.'.html';
+        $queryData->setMaterialId($materialId);
+        $queryData->setSiteId($siteId);
+        $queryData->setPositionId($positionId);
+        $queryData->setPid($pid);
+        $req->setPromotionCodeReq($queryData);
+        $req->setVersion("1.0");
+        return $this->execute($req);
+    }
 
+*/
 
 }

@@ -27,16 +27,6 @@ class ChannelInviteReq{
     public function getChannelType(){
         return $this->channelType;
     }
-            
-    private $pin;
-    
-    public function setPin($pin){
-        $this->params['pin'] = $pin;
-    }
-
-    public function getPin(){
-        return $this->pin;
-    }
     
     function getInstance(){
         return $this->params;

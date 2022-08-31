@@ -8,19 +8,38 @@ namespace Jimphei\mallsdk\jingdong;
 
 use Jimphei\mallsdk\jingdong\request\domain\GoodsReqDTO;
 use Jimphei\mallsdk\jingdong\request\UnionOpenGoodsQueryRequest;
+use Jimphei\mallsdk\http\Request;
 
 class JdPlus extends JingDong
-
 {
     protected $plus_app_id;
     protected $plus_app_secret;
 
-    public function setPlusCofnig($app_id,$app_secret){
+    protected $vekey;
+    protected $unionId;
+    protected $request;
+    protected $authkey;
+    const WY_URL = 'http://api.vephp.com/jd';///prombyuid?materialId=https://item.jd.com/67289511972.html&unionId=1001034551&positionId=1818437423'
+
+    public function __construct($appKey = "", $appSecret = "",$vekey,$unionId)
+    {
+        parent::__construct($appKey, $appSecret);
+        $this->vekey = $vekey;
+        $this->unionId = $unionId;
+        $this->request = new Request();
+    }
+
+    public function setPlusConfig($app_id,$app_secret){
         $this->plus_app_id = $app_id;
         $this->plus_app_secret = $app_secret;
     }
 
-    protected function generateSign($params)
+    public function setAuthkey($authkey){
+        $this->authkey = $authkey;
+    }
+    //public function 
+
+    protected function generateSignPlus($params)
     {
         ksort($params);
         $stringToBeSigned = $this->plus_app_secret;
@@ -36,7 +55,7 @@ class JdPlus extends JingDong
         return strtoupper(md5($stringToBeSigned));
     }
 
-    public function execute($request, $access_token = null)
+    public function executePlus($request, $access_token = null)
     {
         //组装系统参数
         $sysParams["app_key"] = $this->plus_app_id;
@@ -56,19 +75,17 @@ class JdPlus extends JingDong
         $sysParams[$this->json_param_key] = $apiParams;
 
         //签名
-        $sysParams["sign"] = $this->generateSign($sysParams);
+        $sysParams["sign"] = $this->generateSignPlus($sysParams);
         //系统参数放入GET请求串
         $requestUrl = $this->serverUrl . "?";
         foreach ($sysParams as $sysParamKey => $sysParamValue)
         {
             $requestUrl .= "$sysParamKey=" . urlencode($sysParamValue) . "&";
         }
-        echo $requestUrl;
         //发起HTTP请求
         try
         {
             $resp = $this->curl($requestUrl, $apiParams);
-            var_dump($resp);
         }
         catch (Exception $e)
         {
@@ -82,14 +99,17 @@ class JdPlus extends JingDong
         $respWellFormed = false;
         if ("json" == $this->format)
         {
-            $respObject = json_decode($resp);
+            $respObject = json_decode($resp,true);
+
             if (null !== $respObject)
             {
                 $respWellFormed = true;
-//				foreach ($respObject as $propKey => $propValue)
-//				{
-//					$respObject = $propValue;
-//				}
+                if(!empty($respObject['error_response'])){
+                    return $respObject['error_response'];
+                }
+                //var_dump($respObject);exit;
+                $key = str_replace('.','_',$sysParams["method"]).'_responce';
+                return json_decode($respObject[$key]['queryResult'],true);
             }
         }
         else if("xml" == $this->format)
@@ -105,7 +125,7 @@ class JdPlus extends JingDong
         if (false === $respWellFormed)
         {
             $result = new stdClass();
-            $result->code = 0;
+            $result->code = 1;
             $result->msg = "HTTP_RESPONSE_NOT_WELL_FORMED";
             return $result;
         }
@@ -126,26 +146,74 @@ class JdPlus extends JingDong
      * @param string $sort:	asc,desc升降序,默认降序
      * @return Ambigous <unknown, mixed>
      */
-    public function searchGoods($cat1Id='',$cat2Id='',$cat3Id='',$keyword='',$page_index=1,$page_size=10,$sort_name='',$sort='desc')
+    public function searchGoods($cat1Id=null,$cat2Id=null,$cat3Id=null,$keyword='',$page_index=1,$page_size=10,$sort_name='inOrderComm30Days',$sort='desc')
     {
-
         $req = new UnionOpenGoodsQueryRequest();
 
         $goodsReqDTO= new GoodsReqDTO();
 
-
-        $goodsReqDTO->setCid1($cat1Id);
-        $goodsReqDTO->setCid2($cat2Id);
-        $goodsReqDTO->setCid3($cat3Id);
+        $cat1Id && $goodsReqDTO->setCid1($cat1Id);
+        $cat2Id && $goodsReqDTO->setCid2($cat2Id);
+        $cat3Id && $goodsReqDTO->setCid3($cat3Id);
         $goodsReqDTO->setKeyword($keyword);
         $goodsReqDTO->setPageSize($page_size);
         $goodsReqDTO->setPageIndex($page_index);
         $goodsReqDTO->setSortName($sort_name);
         $goodsReqDTO->setSort($sort);
+        $goodsReqDTO->setIsCoupon(1);
 
         $req->setGoodsReqDTO($goodsReqDTO);
         $req->setVersion("1.0");
-        return $this->execute($req);
+        return $this->executePlus($req);
+    }
+
+    public function getPromotion($goodsId,$positionId,$siteId,$couponLink = ''){
+        $url = self::WY_URL.'/prombyuid';
+        $materialId = 'https://item.jd.com/'.$goodsId.'.html';
+        $data = [
+            'vekey'=>$this->vekey,
+            'materialId'=>$materialId,
+            'unionId'=>$this->unionId,
+            'positionId'=>$positionId,
+            'siteId'=>$siteId,
+        ];
+        if(!empty($couponLink)){
+            $data['couponUrl'] = $couponLink;
+        }
+        $result = $this->request->get($url,$data);
+        return $result->array();
+    }
+
+    public function getUidPromotion($goodsId,$positionId,$couponLink = ''){
+        $url = self::WY_URL.'/prombyuid';
+        $materialId = 'https://item.jd.com/'.$goodsId.'.html';
+        $data = [
+            'vekey'=>$this->vekey,
+            'materialId'=>$materialId,
+            'unionId'=>$this->unionId,
+            'positionId'=>$positionId
+        ];
+        if(!empty($couponLink)){
+            $data['couponUrl'] = $couponLink;
+        }
+        $result = $this->request->get($url,$data);
+        return $result->array();
+    }
+
+    public function getPid($uid,$siteId){
+        $url = self::WY_URL.'/createpid';
+        $data = [
+            'vekey'=>$this->vekey,
+            'key'=>$this->authkey,
+            'unionId'=>$this->unionId,
+            'unionType'=>3,
+            'type'=>2,
+            'spaceNameList'=>'pid_for_'.$uid,
+            'siteId'=>$siteId
+        ];
+
+        $result = $this->request->get($url,$data);
+        return $result->array();
     }
 
 

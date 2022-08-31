@@ -3,7 +3,7 @@
 
 namespace Jimphei\mallsdk\jingdong;
 
-require_once('sdk/JdSdk.php');
+require_once 'sdk/JdSdk.php';
 
 class Jd
 {
@@ -326,23 +326,6 @@ class Jd
         $req->setSkuIds($skus);
         $request->setGoodsReq($req);
         return $this->query($request);
-    }
-
-    public function test(){
-        $req = new \UnionOpenGoodsQueryRequest();
-        $goodsReqDTO= new \UnionOpenGoodsQuery\GoodsReqDTO;
-
-//        $goodsReqDTO->setCid1($cat1Id);
-//        $goodsReqDTO->setCid2($cat2Id);
-//        $goodsReqDTO->setCid3($cat3Id);
-//        $goodsReqDTO->setKeyword($keyword);
-//        $goodsReqDTO->setPageSize($page_size);
-//        $goodsReqDTO->setPageIndex($page_index);
-//        $goodsReqDTO->setSortName($sort_name);
-//        $goodsReqDTO->setSort($sort);
-//        $req->setGoodsReqDTO($goodsReqDTO);
-//        $req->setVersion("1.0");
-//        $resp = $c->execute($req, $c->accessToken);
     }
 
 

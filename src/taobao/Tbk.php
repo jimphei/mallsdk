@@ -13,14 +13,14 @@ use Jimphei\mallsdk\util\RespTrait;
 class Tbk implements RequestInterface
 {
     use RespTrait;
-    private $appKey;
-    private $appSecret;
-    private $format = "json";
-    private $signMethod = "md5";
-    private $pid;
-    private $adzoneId;
-    private $startTime;
-    private $endTime;
+    protected $appKey;
+    protected $appSecret;
+    protected $format = "json";
+    protected $signMethod = "md5";
+    protected $pid;
+    protected $adzoneId;
+    protected $startTime;
+    protected $endTime;
     protected $client;
 
     public function __construct($appKey = "", $appSecret = "")
@@ -155,14 +155,14 @@ class Tbk implements RequestInterface
     }
 
     /**
-     * 抓取订单
+     * 抓取订单，新申请的淘宝联盟无订单权限
      * @param $params
      * @param int $query_type
      * @param string $tk_status
      * @param string $order_scene
      * @return mixed
      */
-    public function fetchOrder($params, int $query_type = 2, int $tk_status = null, int $order_scene = 1)
+    public function fetchOrder($params, int $query_type = 2, int $tk_status = null, int $order_scene = 2)
     {
         if(!$this->startTime or !$this->endTime){
             return $this->error(1,'缺少时间字段');
@@ -205,9 +205,7 @@ class Tbk implements RequestInterface
         if($note){
             $req->setNote($note);
         }
-
         $resp = $this->client->execute($req,$session);
-
         return $resp;
     }
 
@@ -248,10 +246,9 @@ class Tbk implements RequestInterface
         return $res;
     }
 
-
     public function authUrl($callbackUri,$state='tksaas'){
         $url = 'https://oauth.taobao.com/authorize?response_type=code&client_id='.$this->appKey;
-        $url .='&redirect_uri='.$callbackUri.'&state='.$state.'&view=web';
+        $url .='&redirect_uri='.$callbackUri.'&state='.$state.'&view=wap';
         return $url;
     } 
     

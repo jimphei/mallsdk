@@ -94,7 +94,7 @@ class Pdd implements RequestInterface
         if(!$this->startTime or !$this->endTime){
             return $this->error(1,'缺少时间字段');
         }
-        if((strtotime($this->endTime)-strtotime($this->startTime))>24*3600){
+        if(($this->endTime-$this->startTime)>24*3600){
             return $this->error(1,'时间间隔大于24小时');
         }
 
@@ -216,7 +216,6 @@ class Pdd implements RequestInterface
             return $this->error(1,'缺少uid');
         }
 
-
         if($pid){
             $request->setPid($pid);
         }
@@ -225,7 +224,6 @@ class Pdd implements RequestInterface
                 return $this->error(1,'缺少pid');
             }
         }           
-
         $request->setCustomParameters(json_encode($custom_parameters,JSON_UNESCAPED_UNICODE));
         if($need_auth){
             $request->setGenerateAuthorityUrl(true);
@@ -396,7 +394,6 @@ class Pdd implements RequestInterface
             $request->setPid($pid);
         }
         $custom_parameters = ['uid'=>$uid];
-
         $request->setCustomParameters(json_encode($custom_parameters,JSON_UNESCAPED_UNICODE));        
         try{
             $response = $this->client->syncInvoke($request);
@@ -405,7 +402,6 @@ class Pdd implements RequestInterface
             echo $e->getMessage();
             exit;
         }
-
 
         $content = $response->getContent();
         return $this->parse($content);

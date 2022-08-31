@@ -97,26 +97,6 @@ class PromotionCodeReq{
     public function getChannelId(){
         return $this->channelId;
     }
-            
-    private $pin;
-    
-    public function setPin($pin){
-        $this->params['pin'] = $pin;
-    }
-
-    public function getPin(){
-        return $this->pin;
-    }
-            
-    private $command;
-    
-    public function setCommand($command){
-        $this->params['command'] = $command;
-    }
-
-    public function getCommand(){
-        return $this->command;
-    }
     
     function getInstance(){
         return $this->params;

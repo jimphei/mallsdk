@@ -39,7 +39,7 @@ class UnionOpenGoodsQueryRequest
     }
 
     public function setGoodsReqDTO($goodsReqDTO){
-        $this->apiParas['goodsReqDTO'] = $goodsReqDTO;
+        $this->apiParas['goodsReqDTO'] = $goodsReqDTO->getInstance();
     }
 
     public function getGoodsReqDTO(){
